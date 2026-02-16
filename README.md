@@ -9,3 +9,11 @@ Useful for CI pipelines, ETL sanity checks, supplier feeds, and export drift det
 pip install -e .
 
 
+## Commands
+
+### Create a contract
+snapshotgate learn data.csv --out contract.json
+
+### Validate a file against a contract
+snapshotgate check data_new.csv --contract contract.json --out-dir out/
+
