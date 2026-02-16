@@ -50,5 +50,51 @@ def try_float(x: Any) -> float | None:
     except Exception:
         return None
 
+def try_bool(x: Any) -> bool | None:
+    if x is None:
+        return None
+    if isinstance(x, bool):
+        return x
+    s = norm_str(x).lower()
+    if s in ("true", "t", "1", "yes", "y"):
+        return True
+    if s in ("false", "f", "0", "no", "n"):
+        return False
+    return None
 
+
+def try_dateish(x: Any) -> str | None:
+    """
+    Returns ISO date string if parseable, else None.
+    (We keep it lightweight: common formats only.)
+    """
+    if x is None:
+        return None
+    if isinstance(x, datetime):
+        return x.isoformat()
+    s = norm_str(x)
+    if not s:
+        return None
+
+    fmts = [
+        "%Y-%m-%d",
+        "%Y/%m/%d",
+        "%m/%d/%Y",
+        "%Y-%m-%d %H:%M:%S",
+        "%Y-%m-%dT%H:%M:%S",
+        "%Y-%m-%dT%H:%M:%S.%f",
+    ]
+    for f in fmts:
+        try:
+            dt = datetime.strptime(s, f)
+            return dt.isoformat()
+        except Exception:
+            pass
+    return None
+
+
+def safe_div(a: float, b: float) -> float:
+    if b == 0:
+        return 0.0
+    return a / b
 
