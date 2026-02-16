@@ -7,3 +7,15 @@ name = "snapshotgate"
 version = "0.1.0"
 description = "Lightweight data contract + drift gate for CSV/JSONL."
 
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = []
+
+[project.scripts]
+snapshotgate = "snapshotgate.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.package-data]
+snapshotgate = ["templates/report.html"]
