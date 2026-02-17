@@ -90,7 +90,51 @@ def profile_rows(src: RowSource, max_rows: int | None = None) -> dict[str, Any]:
     top_map: dict[str, dict[str, int]] = {}
     type_votes: dict[str, dict[str, int]] = {}
 
+    row_count = 0
+    for row in src.rows:
+        row_count += 1
+        if max_rows is not None and row_count > max_rows:
+            break
 
+        for k in row.keys():
+            colnames.add(norm_str(k))
+
+        for col in colnames:
+            if col not in profiles:
+                profiles[col] = ColProfile(
+                    name=col, inferred_type="string",
+                    count=0, nulls=0, unique_approx=0,
+                    top_values=[], num_count=0, num_mean=0.0, num_m2=0.0
+                )
+                uniques[col] = set()
+                top_map[col] = {}
+                type_votes[col] = {}
+
+            v = row.get(col)
+            profiles[col].add(v)
+
+            if not is_empty(v):
+                sv = norm_str(v)
+                if len(uniques[col]) < 5000: 
+                    uniques[col].add(sv)
+                if len(sv) <= 120:
+                    top_map[col][sv] = top_map[col].get(sv, 0) + 1
+
+                t = infer_type_vote(v)
+                if t != "empty":
+                    type_votes[col][t] = type_votes[col].get(t, 0) + 1
+
+    cols_sorted = sorted(list(colnames))
+    out_cols = []
+    for c in cols_sorted:
+        out_cols.append(profiles[c].finalize(uniques[c], top_map[c], type_votes[c]))
+
+    return {
+        "source": src.name,
+        "row_count": row_count,
+        "columns": cols_sorted,
+        "profiles": out_cols,
+    }
 
 
 
