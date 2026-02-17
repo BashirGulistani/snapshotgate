@@ -45,6 +45,31 @@ class ColProfile:
             pass
 
 
+    def finalize(self, uniques: set[str], top_map: dict[str, int], type_votes: dict[str, int]) -> dict[str, Any]:
+        inferred = "string"
+        if type_votes:
+            inferred = max(type_votes.items(), key=lambda kv: kv[1])[0]
+
+        var = safe_div(self.num_m2, (self.num_count - 1)) if self.num_count > 1 else 0.0
+        std = var ** 0.5
+
+        top = sorted(top_map.items(), key=lambda kv: kv[1], reverse=True)[:12]
+        return {
+            "name": self.name,
+            "inferred_type": inferred,
+            "count": self.count,
+            "nulls": self.nulls,
+            "null_rate": safe_div(self.nulls, self.count),
+            "unique_approx": len(uniques),
+            "top_values": top,
+            "numeric": {
+                "count": self.num_count,
+                "mean": self.num_mean if self.num_count else 0.0,
+                "std": std if self.num_count else 0.0,
+            },
+        }
+
+
 
 
 
