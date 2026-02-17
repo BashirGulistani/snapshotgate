@@ -54,4 +54,13 @@ def read_jsonl_rows(path: str) -> RowSource:
 
 
 
+def read_rows(path: str) -> RowSource:
+    p = path.lower()
+    if p.endswith(".csv"):
+        return read_csv_rows(path)
+    if p.endswith(".jsonl"):
+        return read_jsonl_rows(path)
+    raise ValueError(f"Unsupported file type: {path}")
+
+
 
