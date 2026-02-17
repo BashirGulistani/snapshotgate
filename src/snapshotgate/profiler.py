@@ -70,6 +70,26 @@ class ColProfile:
         }
 
 
+def infer_type_vote(v: Any) -> str:
+    if is_empty(v):
+        return "empty"
+    if try_float(v) is not None:
+        return "number"
+    if try_bool(v) is not None:
+        return "bool"
+    if try_dateish(v) is not None:
+        return "date"
+    return "string"
+
+
+def profile_rows(src: RowSource, max_rows: int | None = None) -> dict[str, Any]:
+    colnames: set[str] = set(src.columns)
+
+    profiles: dict[str, ColProfile] = {}
+    uniques: dict[str, set[str]] = {}
+    top_map: dict[str, dict[str, int]] = {}
+    type_votes: dict[str, dict[str, int]] = {}
+
 
 
 
