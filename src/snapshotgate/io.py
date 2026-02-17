@@ -62,5 +62,9 @@ def read_rows(path: str) -> RowSource:
         return read_jsonl_rows(path)
     raise ValueError(f"Unsupported file type: {path}")
 
+def write_json(obj: Any, path: str) -> None:
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(obj, f, ensure_ascii=False, indent=2)
+
 
 
