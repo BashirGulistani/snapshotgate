@@ -32,3 +32,10 @@ def validate(contract: dict[str, Any], new_profile: dict[str, Any]) -> dict[str,
     base_p = _profiles_by_name(base)
     new_p = _profiles_by_name(new_profile)
 
+    type_changes = []
+    per_col = []
+
+    base_rc = float(base.get("row_count", 0) or 0)
+    new_rc = float(new_profile.get("row_count", 0) or 0)
+    rc_ratio = safe_div(new_rc, base_rc) if base_rc else 1.0
+    row_count_ok = (rc_ratio >= th["row_count_min_ratio"]) and (rc_ratio <= th["row_count_max_ratio"])
