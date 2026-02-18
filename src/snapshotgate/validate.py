@@ -85,6 +85,41 @@ def validate(contract: dict[str, Any], new_profile: dict[str, Any]) -> dict[str,
             violations.append({"kind": "numeric_mean_drift", **(numeric_detail or {})})
 
 
+        if violations:
+            per_col.append({"column": col, "violations": violations})
+
+    summary = {
+        "missing_columns": missing,
+        "new_columns": added,
+        "type_changes": type_changes,
+        "row_count": {
+            "baseline": base_rc,
+            "new": new_rc,
+            "ratio": rc_ratio,
+            "ok": row_count_ok,
+            "min_ratio": th["row_count_min_ratio"],
+            "max_ratio": th["row_count_max_ratio"],
+        },
+        "per_column": per_col,
+    }
+
+    fail_reasons = []
+    if len(added) > int(th["max_new_columns"]):
+        fail_reasons.append("too_many_new_columns")
+    if len(missing) > int(th["max_missing_columns"]):
+        fail_reasons.append("too_many_missing_columns")
+    if len(type_changes) > int(th["max_type_changes"]):
+        fail_reasons.append("too_many_type_changes")
+    if not row_count_ok:
+        fail_reasons.append("row_count_out_of_bounds")
+    if len(per_col) > 0:
+        fail_reasons.append("column_drift")
+
+    return {
+        "ok": len(fail_reasons) == 0,
+        "fail_reasons": fail_reasons,
+        "summary": summary,
+    }
 
 
 
