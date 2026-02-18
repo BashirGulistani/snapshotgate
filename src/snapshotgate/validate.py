@@ -64,6 +64,26 @@ def validate(contract: dict[str, Any], new_profile: dict[str, Any]) -> dict[str,
         jac = jaccard(b_top, n_top)
         jac_drop = 1.0 - jac
 
+        numeric_flag = False
+        numeric_detail = None
+        if b["inferred_type"] == "number" and n["inferred_type"] == "number":
+            b_mean = float((b.get("numeric") or {}).get("mean", 0.0) or 0.0)
+            n_mean = float((n.get("numeric") or {}).get("mean", 0.0) or 0.0)
+            b_std = float((b.get("numeric") or {}).get("std", 0.0) or 0.0)
+            z = safe_div(abs(n_mean - b_mean), (b_std if b_std else 1.0))
+            numeric_detail = {"base_mean": b_mean, "new_mean": n_mean, "base_std": b_std, "mean_z": z}
+            numeric_flag = z > float(th["max_numeric_mean_z"])
+
+        violations = []
+        if null_inc > float(th["max_null_rate_increase"]):
+            violations.append({"kind": "null_rate_spike", "base": b_null, "new": n_null, "delta": null_inc})
+        if ur_change > float(th["max_unique_rate_change"]):
+            violations.append({"kind": "unique_rate_drift", "base": b_ur, "new": n_ur, "ratio": ur_change})
+        if jac_drop > float(th["max_top_value_jaccard_drop"]):
+            violations.append({"kind": "top_values_drift", "jaccard": jac, "drop": jac_drop})
+        if numeric_flag:
+            violations.append({"kind": "numeric_mean_drift", **(numeric_detail or {})})
+
 
 
 
