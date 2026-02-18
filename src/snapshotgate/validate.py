@@ -18,3 +18,17 @@ def jaccard(a: set[str], b: set[str]) -> float:
     return safe_div(inter, uni)
 
 
+
+def validate(contract: dict[str, Any], new_profile: dict[str, Any]) -> dict[str, Any]:
+    base = contract["baseline"]
+    th = contract["thresholds"]
+
+    base_cols = set(base.get("columns", []))
+    new_cols = set(new_profile.get("columns", []))
+
+    missing = sorted(list(base_cols - new_cols))
+    added = sorted(list(new_cols - base_cols))
+
+    base_p = _profiles_by_name(base)
+    new_p = _profiles_by_name(new_profile)
+
