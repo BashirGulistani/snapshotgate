@@ -22,3 +22,9 @@ def default_thresholds() -> dict[str, Any]:
     return Thresholds().__dict__
 
 
+def make_contract(profile: dict[str, Any], thresholds: dict[str, Any] | None = None) -> dict[str, Any]:
+    return {
+        "version": 1,
+        "baseline": profile,
+        "thresholds": thresholds or default_thresholds(),
+    }
