@@ -96,4 +96,26 @@
       : `<span class="badge"><span class="dot bad"></span>FAIL</span>`;
 
 
+    rows.textContent = `${s.row_count.baseline} → ${s.row_count.new} (ratio ${s.row_count.ratio.toFixed(3)})`;
+    missing.textContent = (s.missing_columns || []).join(", ") || "—";
+    added.textContent = (s.new_columns || []).join(", ") || "—";
+    reasons.textContent = (v.fail_reasons || []).join("\n") || "—";
+    types.textContent = JSON.stringify(s.type_changes || [], null, 2);
 
+    const per = s.per_column || [];
+    tbody.innerHTML = per.map(item => {
+      const vv = item.violations.map(x => JSON.stringify(x)).join("<br/>");
+      return `<tr><td class="mono">${escapeHtml(item.column)}</td><td class="mono">${vv}</td></tr>`;
+    }).join("") || `<tr><td colspan="2" class="mono">No drift violations.</td></tr>`;
+
+    function escapeHtml(s){
+      return String(s)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+  </script>
+</body>
+</html>
