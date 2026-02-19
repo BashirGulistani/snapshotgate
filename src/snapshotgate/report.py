@@ -12,3 +12,14 @@ def _load_template() -> str:
         return f.read()
 
 
+def write_report_html(contract: dict[str, Any], new_profile: dict[str, Any], validation: dict[str, Any], out_path: str) -> None:
+    tpl = _load_template()
+    payload = {
+        "contract": contract,
+        "new_profile": new_profile,
+        "validation": validation,
+    }
+    js = json.dumps(payload, ensure_ascii=False)
+    html = tpl.replace("{{__DATA__}}", js)
+    with open(out_path, "w", encoding="utf-8") as f:
+        f.write(html)
