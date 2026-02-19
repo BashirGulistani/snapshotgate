@@ -74,4 +74,18 @@
     </table>
   </div>
 
+  <script>
+    const DATA = {{__DATA__}};
+    const v = DATA.validation;
+    const s = v.summary;
+
+    const meta = document.getElementById("meta");
+    const result = document.getElementById("result");
+    const rows = document.getElementById("rows");
+    const missing = document.getElementById("missing");
+    const added = document.getElementById("added");
+    const reasons = document.getElementById("reasons");
+    const types = document.getElementById("types");
+    const tbody = document.getElementById("tbody");
+
 
