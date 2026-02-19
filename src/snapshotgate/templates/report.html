@@ -89,3 +89,11 @@
     const tbody = document.getElementById("tbody");
 
 
+    meta.textContent = `${DATA.contract.baseline.source}  →  ${DATA.new_profile.source}`;
+
+    result.innerHTML = v.ok
+      ? `<span class="badge"><span class="dot ok"></span>PASS</span>`
+      : `<span class="badge"><span class="dot bad"></span>FAIL</span>`;
+
+
+
