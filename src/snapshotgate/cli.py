@@ -52,3 +52,28 @@ def main(argv: list[str] | None = None) -> None:
             with open(args.contract, "r", encoding="utf-8") as f:
                 contract = json.load(f)
 
+
+            src = read_rows(args.path)
+            prof = profile_rows(src, max_rows=args.max_rows)
+            res = validate(contract, prof)
+
+            out_dir = ensure_out_dir(args.out_dir)
+            out_json = os.path.join(out_dir, "validation.json")
+            out_html = os.path.join(out_dir, "report.html")
+
+            write_json({"profile": prof, "validation": res}, out_json)
+            write_report_html(contract, prof, res, out_html)
+
+            print(f"validation ok: {res['ok']}")
+            print(f"report: {os.path.abspath(out_html)}")
+
+            if res["ok"]:
+                raise SystemExit(0)
+            raise SystemExit(1)
+
+        raise SystemExit(2)
+    except SystemExit:
+        raise
+    except Exception as e:
+        print(f"snapshotgate error: {e}", file=sys.stderr)
+        raise SystemExit(2)
