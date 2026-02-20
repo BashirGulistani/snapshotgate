@@ -46,4 +46,9 @@ def main(argv: list[str] | None = None) -> None:
             print(f"Wrote contract: {os.path.abspath(args.out)}")
             raise SystemExit(0)
 
+        if args.cmd == "check":
+            import json
+
+            with open(args.contract, "r", encoding="utf-8") as f:
+                contract = json.load(f)
 
