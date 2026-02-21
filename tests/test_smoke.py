@@ -21,6 +21,21 @@ def test_smoke_contract_and_validate():
             {"id": "3", "price": "12.0", "status": "draft"},
         ],
     )
+    new = RowSource(
+        name="new.csv",
+        columns=["id", "price", "status"],
+        rows=[
+            {"id": "1", "price": "50.0", "status": "active"},
+            {"id": "2", "price": "51.0", "status": ""},
+            {"id": "3", "price": "52.0", "status": "draft"},
+        ],
+    )
 
+    base_prof = profile_rows(base)
+    contract = make_contract(base_prof)
+    new_prof = profile_rows(new)
+
+    res = validate(contract, new_prof)
+    assert "per_column" in res["summary"]
 
 
