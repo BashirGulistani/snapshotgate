@@ -9,3 +9,18 @@ from snapshotgate.validate import validate
 
 
 
+
+
+def test_smoke_contract_and_validate():
+    base = RowSource(
+        name="base.csv",
+        columns=["id", "price", "status"],
+        rows=[
+            {"id": "1", "price": "10.0", "status": "active"},
+            {"id": "2", "price": "11.0", "status": "active"},
+            {"id": "3", "price": "12.0", "status": "draft"},
+        ],
+    )
+
+
+
