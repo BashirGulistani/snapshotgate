@@ -100,6 +100,17 @@ def default_severity() -> dict[str, Any]:
 
 
 
+def make_contract(
+    profile: dict[str, Any],
+    thresholds: dict[str, Any] | None = None,
+    *,
+    threshold_profile: str = "default",
+    severity: dict[str, Any] | None = None,
+    column_overrides: dict[str, dict[str, Any]] | None = None,
+    notes: str | None = None,
+) -> dict[str, Any]:
+
+
 
 
 
