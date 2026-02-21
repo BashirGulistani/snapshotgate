@@ -48,6 +48,28 @@ class ColumnOverride:
     expect_type: str | None = None 
 
 
+def _merge(base: dict[str, Any], patch: dict[str, Any]) -> dict[str, Any]:
+
+    out = dict(base)
+    for k, v in patch.items():
+        out[k] = v
+    return out
+
+
+def presets() -> dict[str, dict[str, Any]]:
+
+    strict = asdict(GateThresholds(
+        max_new_columns=0,
+        max_missing_columns=0,
+        max_type_changes=0,
+        row_count_min_ratio=0.85,
+        row_count_max_ratio=1.15,
+        max_null_rate_increase=0.05,
+        max_unique_rate_change=0.25,
+        max_top_value_jaccard_drop=0.20,
+        max_numeric_mean_z=3.0,
+    ))
+
 
 
 
