@@ -35,5 +35,26 @@ class GateThresholds:
 
 
 
+@dataclass(frozen=True)
+class ColumnOverride:
+
+    ignore: bool = False
+
+    max_null_rate_increase: float | None = None
+    max_unique_rate_change: float | None = None
+    max_top_value_jaccard_drop: float | None = None
+    max_numeric_mean_z: float | None = None
+
+    expect_type: str | None = None 
+
+
+
+
+
+
+
+
+
+
 
 
