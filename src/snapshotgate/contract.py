@@ -110,7 +110,28 @@ def make_contract(
     notes: str | None = None,
 ) -> dict[str, Any]:
 
+    base_th = default_thresholds(threshold_profile)
+    th = _merge(base_th, thresholds or {})
+    sev = _merge(default_severity(), severity or {})
 
+    col_ov: dict[str, Any] = {}
+    if column_overrides:
+        for col, ov in column_overrides.items():
+            if not isinstance(ov, dict):
+                continue
+            allowed = set(asdict(ColumnOverride()).keys())
+            clean = {k: v for k, v in ov.items() if k in allowed}
+            col_ov[col] = clean
+
+    return {
+        "version": 2,
+        "baseline": profile,
+        "threshold_profile": threshold_profile,
+        "thresholds": th,
+        "severity": sev,
+        "column_overrides": col_ov,
+        "notes": notes or "",
+    }
 
 
 
