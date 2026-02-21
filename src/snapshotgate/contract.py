@@ -85,6 +85,19 @@ def presets() -> dict[str, dict[str, Any]]:
         max_numeric_mean_z=6.0,
     ))
 
+    return {"strict": strict, "default": default, "lenient": lenient}
+
+
+def default_thresholds(profile: str = "default") -> dict[str, Any]:
+    p = presets()
+    if profile not in p:
+        profile = "default"
+    return p[profile]
+
+
+def default_severity() -> dict[str, Any]:
+    return asdict(Severity())
+
 
 
 
