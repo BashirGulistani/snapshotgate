@@ -71,6 +71,21 @@ def presets() -> dict[str, dict[str, Any]]:
     ))
 
 
+    default = asdict(GateThresholds())
+
+    lenient = asdict(GateThresholds(
+        max_new_columns=5,
+        max_missing_columns=2,
+        max_type_changes=2,
+        row_count_min_ratio=0.50,
+        row_count_max_ratio=2.00,
+        max_null_rate_increase=0.20,
+        max_unique_rate_change=1.00,
+        max_top_value_jaccard_drop=0.55,
+        max_numeric_mean_z=6.0,
+    ))
+
+
 
 
 
